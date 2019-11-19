@@ -1,26 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import './cards/cards.css';
+import Card from './components/Cards/Card';
+import CardDeck from './CardDeck';
+import PokerHand from './components/PokerHand/PokerHand';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+    state = {
+        cards: new CardDeck(),
+        pokerHand: [],
+        result: ''
+    };
+
+    getCards = () => {
+        const pokerHand = this.state.cards.getCards(5);
+        const result = this.getPokerHand(pokerHand);
+        this.setState({ pokerHand, result })
+    };
+
+    getPokerHand = pokerhand => {
+        const pokerHand = new PokerHand();
+        return pokerHand.checkHand(pokerhand);
+    }
+
+    render() {
+        return (
+            <div className="App">
+                <button onClick={this.getCards}>Get cards</button>
+                <div className="playingCards faceImages">
+                    {this.state.pokerHand.map((card, key) =>
+                        <Card
+                            key={key}
+                            suit={card.suit}
+                            rank={card.rank}
+                        />)}
+                    <div>{this.state.result}</div>
+                </div>
+            </div>
+        );
+    }
 }
 
 export default App;
